@@ -1,0 +1,26 @@
+server:
+  port: ${GATEWAY_PORT:8085}
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: customers
+              uri: lb://customer-service
+              predicates:
+                - Path=/api/customers/**
+              filters:
+                - StripPrefix=1
+            - id: accounts
+              uri: lb://ebank-service
+              predicates:
+                - Path=/api/accounts/**
+              filters:
+                - StripPrefix=1
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
